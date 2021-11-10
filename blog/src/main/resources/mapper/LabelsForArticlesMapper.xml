@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.catcatc.blog.mapper.LabelsForArticlesMapper">
+
+    <resultMap id="lfaMap" type="top.catcatc.common.pojo.blog.dto.LabelsForArticlesDTO">
+        <result column="b_number" property="bNumber"></result>
+        <collection property="lId" ofType="java.lang.Long" javaType="java.util.List">
+            <result column="l_id"></result>
+        </collection>
+    </resultMap>
+    <select id="listLfa" resultMap="lfaMap">
+        select b_number, l_id from labels_for_articles
+        <if test="numbers != null">
+            where b_number in
+            <foreach collection="numbers" open="(" separator="," close=")" item="item">
+                ${item}
+            </foreach>
+        </if>
+    </select>
+</mapper>
