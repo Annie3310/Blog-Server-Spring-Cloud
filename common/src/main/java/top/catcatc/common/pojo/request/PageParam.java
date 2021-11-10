@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author 王金义
  * @date 2021/11/9
@@ -14,6 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageParam {
-    private Integer page;
-    private Integer limit;
+    @NotNull(message = "页码不能为空")
+    private Integer page = 1;
+    private Integer limit = 20;
 }

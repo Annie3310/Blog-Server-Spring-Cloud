@@ -46,4 +46,11 @@ public class PublicResponse {
                 .message(errorBody.getMessage())
                 .build();
     }
+
+    public static PublicResponse error(String message) {
+        return PublicResponse.builder()
+                .code("B0001")
+                .message(message)
+                .build();
+    }
 }

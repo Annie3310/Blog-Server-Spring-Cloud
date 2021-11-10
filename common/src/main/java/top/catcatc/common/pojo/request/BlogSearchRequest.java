@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @author 王金义
  * @date 2021/10/14
@@ -12,9 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class BlogSearchRequest extends PageParam{
+    @NotNull(message = "关键词不能为空")
     private String keyword;
-    private Integer page;
-    private Integer perPage;
 }
