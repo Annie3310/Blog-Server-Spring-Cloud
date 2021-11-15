@@ -18,5 +18,5 @@ import javax.validation.constraints.NotNull;
 public class PageParam {
     @NotNull(message = "页码不能为空")
     private Integer page = 1;
-    private Integer limit = 20;
+    private Integer limit;
 }

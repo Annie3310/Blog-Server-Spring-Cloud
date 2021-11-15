@@ -14,7 +14,6 @@ import top.catcatc.service.impl.BlogServiceImpl;
 import top.catcatc.service.impl.LabelServiceImpl;
 import top.catcatc.service.impl.LabelsForArticlesServiceImpl;
 import top.catcatc.controller.service.RequestService;
-import top.catcatc.common.assertion.Assertion;
 import top.catcatc.common.enums.ResponseEnum;
 import top.catcatc.common.exception.BlogException;
 import top.catcatc.common.pojo.Converter;
@@ -31,7 +30,6 @@ import top.catcatc.common.pojo.request.PageParam;
 import top.catcatc.common.pojo.request.SetCoverRequest;
 import top.catcatc.common.pojo.response.PublicResponse;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -45,29 +43,23 @@ public class RequestServiceImpl implements RequestService {
     @Value("${blog.page.limit}")
     private Integer LIMIT;
 
-    final private String BLOG_STATE_OPEN = "open";
-    final private String BLOG_STATE_CLOSED = "closed";
-    final private Integer FIRST_PAGE = 1;
-
     final private BlogServiceImpl blogService;
     final private ArticleServiceImpl articleService;
     final private LabelServiceImpl labelService;
     final private LabelsForArticlesServiceImpl labelsForArticlesService;
     final private RestTemplate restTemplate;
-    final private HttpServletRequest request;
 
-    public RequestServiceImpl(BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate, HttpServletRequest request) {
+    public RequestServiceImpl(BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate) {
         this.blogService = blogService;
         this.articleService = articleService;
         this.labelService = labelService;
         this.labelsForArticlesService = labelsForArticlesService;
         this.restTemplate = restTemplate;
-        this.request = request;
     }
 
     @Override
     public PublicResponse listBlogs(PageParam page) {
-        final List<BlogVO> blogVOList = this.listBlogs(page, BLOG_STATE_OPEN);
+        final List<BlogVO> blogVOList = this.listBlogs(page, "open");
         return PublicResponse.success(blogVOList);
     }
 
@@ -146,6 +138,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public PublicResponse listArchive(PageParam page) {
+        final String BLOG_STATE_CLOSED = "closed";
         final List<BlogVO> blogVOList = this.listBlogs(page, BLOG_STATE_CLOSED);
         return PublicResponse.success(blogVOList);
     }

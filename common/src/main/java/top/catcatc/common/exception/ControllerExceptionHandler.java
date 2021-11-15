@@ -6,7 +6,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.HttpClientErrorException;
-import top.catcatc.common.assertion.Assertion;
 import top.catcatc.common.enums.ResponseEnum;
 import top.catcatc.common.pojo.response.PublicResponse;
 
@@ -20,7 +19,7 @@ import java.util.Arrays;
  */
 @RestControllerAdvice
 public class ControllerExceptionHandler {
-    private static final Logger logger = LoggerFactory.getLogger(Assertion.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
     @ExceptionHandler(BlogException.class)
     public PublicResponse handleBlogException(BlogException e) {
         logger.warn(e.getResponseEnum().getMessage());

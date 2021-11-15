@@ -3,9 +3,9 @@
 <mapper namespace="top.catcatc.mapper.mapper.LabelsForArticlesMapper">
 
     <resultMap id="lfaMap" type="top.catcatc.common.pojo.dto.LabelsForArticlesDTO">
-        <result column="b_number" property="bNumber"></result>
+        <result column="b_number" property="bNumber"/>
         <collection property="lId" ofType="java.lang.Long" javaType="java.util.List">
-            <result column="l_id"></result>
+            <result column="l_id"/>
         </collection>
     </resultMap>
     <select id="listLfa" resultMap="lfaMap">

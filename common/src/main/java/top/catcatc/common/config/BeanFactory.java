@@ -1,4 +1,4 @@
-package top.catcatc.common.bean;
+package top.catcatc.common.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

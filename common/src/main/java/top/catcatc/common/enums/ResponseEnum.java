@@ -9,8 +9,6 @@ package top.catcatc.common.enums;
 public enum ResponseEnum {
     SUCCESS("00000", "Success"),
 
-    VALUE_IS_NULL("B0001", "传入值为 null"),
-    VALUES_ARE_NOT_EQUALS("B0001", "两个传入对象不是同一个对象"),
     SEARCH_NO_RESULT("B0001", "没有搜索到结果"),
     NO_BLOG("B0001", "没有博客"),
     NO_LABELS("B0001", "该仓库没有标签"),

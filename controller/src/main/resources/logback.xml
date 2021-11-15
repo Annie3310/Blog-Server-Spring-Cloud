@@ -52,7 +52,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="top.catcatc.mapper.mapper" level="debug"></logger>
+    <logger name="top.catcatc.mapper.mapper" level="debug"/>
 <!--    <logger name="com.example.demo.controller" level="debug"></logger>-->
 
     <root level="info">

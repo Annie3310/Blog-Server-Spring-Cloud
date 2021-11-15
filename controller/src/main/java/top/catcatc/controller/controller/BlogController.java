@@ -25,7 +25,7 @@ public class BlogController {
     }
 
     @GetMapping("list/blogs")
-    public PublicResponse listBlogs(PageParam page) {
+    public PublicResponse listBlogs(@Valid PageParam page) {
         return this.service.listBlogs(page);
     }
 
@@ -45,7 +45,7 @@ public class BlogController {
     }
 
     @GetMapping("list/blogs/label/{id}")
-    public PublicResponse listBlogsByLabelId(@PathVariable Long id, PageParam page) {
+    public PublicResponse listBlogsByLabelId(@Valid PageParam page, @PathVariable Long id) {
         return this.service.listBlogsByLabel(id, page);
     }
 
@@ -55,7 +55,7 @@ public class BlogController {
     }
 
     @GetMapping("list/archive")
-    public PublicResponse listArchive(PageParam page) {
+    public PublicResponse listArchive(@Valid PageParam page) {
         return this.service.listArchive(page);
     }
 
