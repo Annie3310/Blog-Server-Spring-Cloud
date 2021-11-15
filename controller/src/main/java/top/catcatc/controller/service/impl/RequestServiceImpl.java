@@ -7,6 +7,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 import top.catcatc.service.impl.ArticleServiceImpl;
 import top.catcatc.service.impl.BlogServiceImpl;
@@ -105,7 +106,8 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public PublicResponse listLabels() {
         final Map<Long, Label> labelMap = this.listLabelsMapper();
-        Assertion.isEmpty(labelMap, ResponseEnum.NO_LABELS);
+
+        Assert.notEmpty(labelMap, ResponseEnum.NO_LABELS.getMessage());
 
         final List<LabelVO> labelVOS = labelMap.values().stream().map(Converter::labelVO).collect(Collectors.toList());
         return PublicResponse.success(labelVOS);
@@ -125,7 +127,9 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public PublicResponse listBlogsByLabel(Long id, PageParam page) {
         final List<String> numbers = this.listNumbersByLabelId(id);
-        Assertion.isEmpty(numbers, ResponseEnum.NO_BLOGS_IN_THE_LABEL);
+
+        Assert.notEmpty(numbers, ResponseEnum.NO_BLOGS_IN_THE_LABEL.getMessage());
+
         final List<Blog> blogs = this.listBlogsMapper(new Page<>(page.getPage(), page.getLimit()), numbers);
 
         final Map<String, List<Long>> lfaMap = this.listLfaMapper(numbers);
@@ -178,11 +182,13 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private List<BlogVO> listBlogs(PageParam page, String state) {
-        // FIXME 页码不匹配时可以取到值
         final PageParam pageParam = Optional.ofNullable(page).orElseGet(() -> new PageParam(1, this.LIMIT));
         final Optional<List<Blog>> optionalBlogs = Optional.ofNullable(this.listBlogsMapper(new Page<>(pageParam.getPage(), pageParam.getLimit()), state));
         // 获取博客
         final List<Blog> blogs = optionalBlogs.orElseThrow(() -> new BlogException(ResponseEnum.NO_BLOG));
+        if (blogs.isEmpty()) {
+            return new ArrayList<>();
+        }
         // 获取标签博客映射关系
         final Map<String, List<Long>> lfaMap = this.listLfaMapper(null);
 
