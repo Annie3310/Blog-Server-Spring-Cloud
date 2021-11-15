@@ -10,6 +10,8 @@ import top.catcatc.common.assertion.Assertion;
 import top.catcatc.common.enums.ResponseEnum;
 import top.catcatc.common.pojo.response.PublicResponse;
 
+import java.util.Arrays;
+
 /**
  * 异常捕获器
  *
@@ -21,18 +23,29 @@ public class ControllerExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(Assertion.class);
     @ExceptionHandler(BlogException.class)
     public PublicResponse handleBlogException(BlogException e) {
-        e.printStackTrace();
+        logger.warn(e.getResponseEnum().getMessage());
+        logger.warn(Arrays.toString(e.getStackTrace()));
         return PublicResponse.exception(e);
     }
     @ExceptionHandler(HttpClientErrorException.class)
     public PublicResponse handleHttpClientErrorException(HttpClientErrorException e) {
         logger.warn(e.getMessage());
+        logger.warn(Arrays.toString(e.getStackTrace()));
         return PublicResponse.error(ResponseEnum.TOO_MANY_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public PublicResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         logger.warn(e.getAllErrors().get(0).getDefaultMessage());
+        logger.warn(Arrays.toString(e.getStackTrace()));
         return PublicResponse.error(e.getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public PublicResponse handleIllegalArgumentException(IllegalArgumentException e) {
+        final String message = e.getMessage();
+        logger.warn(message);
+        logger.warn(Arrays.toString(e.getStackTrace()));
+        return PublicResponse.error(message);
     }
 }
