@@ -40,12 +40,12 @@ public class BlogController {
     }
 
     @GetMapping("list/labels/blog/{number}")
-    public PublicResponse getLabels(@PathVariable String number) {
+    public PublicResponse getLabelsByBlogNumber(@PathVariable String number) {
         return this.service.listLabelsForBlog(number);
     }
 
     @GetMapping("list/blogs/label/{id}")
-    public PublicResponse listBlogsByLabel(@PathVariable Long id, PageParam page) {
+    public PublicResponse listBlogsByLabelId(@PathVariable Long id, PageParam page) {
         return this.service.listBlogsByLabel(id, page);
     }
 
