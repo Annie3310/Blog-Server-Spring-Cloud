@@ -1,80 +1,73 @@
-package top.catcatc.controller.controller;
+package top.catcatc.customer.controller;
 
-import org.springframework.beans.factory.annotation.Value;
-import top.catcatc.controller.service.RequestService;
-import top.catcatc.controller.service.impl.RequestServiceImpl;
+import org.springframework.web.bind.annotation.*;
 import top.catcatc.common.pojo.request.BlogSearchRequest;
 import top.catcatc.common.pojo.request.PageParam;
 import top.catcatc.common.pojo.request.SetCoverRequest;
 import top.catcatc.common.pojo.response.PublicResponse;
-import org.springframework.web.bind.annotation.*;
+import top.catcatc.customer.feigon.Customer;
 
 import javax.validation.Valid;
 
 /**
- * 博客后端接口
- *
  * @author 王金义
- * @date 2021/8/30
+ * @date 2021/11/16
  */
 @RestController
-public class BlogController {
-    @Value("${server.port}")
-    private Integer port;
+public class Controller {
+    final private Customer customer;
 
-    private final RequestService service;
-
-    public BlogController(RequestServiceImpl service) {
-        this.service = service;
+    public Controller(Customer customer) {
+        this.customer = customer;
     }
 
     @GetMapping("port")
     public Integer port() {
-        return this.port;
+        return this.customer.port();
     }
 
     @GetMapping("list/blogs")
     public PublicResponse listBlogs(@Valid PageParam page) {
-        return this.service.listBlogs(page);
+        return this.customer.listBlogs(page.getPage(), page.getLimit());
     }
 
     @GetMapping("get/blog/{number}")
     public PublicResponse getBlog(@PathVariable String number) {
-        return this.service.getBlog(number);
+        return this.customer.getBlog(number);
     }
 
     @GetMapping("list/labels")
     public PublicResponse listLabels() {
-        return this.service.listLabels();
+        return this.customer.listLabels();
     }
 
     @GetMapping("list/labels/blog/{number}")
     public PublicResponse getLabelsByBlogNumber(@PathVariable String number) {
-        return this.service.listLabelsForBlog(number);
+        return this.customer.getLabelsByBlogNumber(number);
     }
 
     @GetMapping("list/blogs/label/{id}")
     public PublicResponse listBlogsByLabelId(@Valid PageParam page, @PathVariable Long id) {
-        return this.service.listBlogsByLabel(id, page);
+        return this.customer.listBlogsByLabelId(page.getPage(), page.getLimit(), id);
     }
 
     @GetMapping("get/label/{id}")
     public PublicResponse getLabel(@PathVariable Long id) {
-        return this.service.getLabelById(id);
+        return this.customer.getLabel(id);
     }
 
     @GetMapping("list/archive")
     public PublicResponse listArchive(@Valid PageParam page) {
-        return this.service.listArchive(page);
+        return this.listArchive(page);
     }
 
     @GetMapping("search/blogs")
     public PublicResponse search(@Valid BlogSearchRequest request) {
-        return this.service.search(request);
+        return this.customer.search(request.getKeyword(), request.getPage(), request.getLimit());
     }
 
     @PutMapping("set/cover")
     public PublicResponse setCover(@Valid @RequestBody SetCoverRequest request) {
-        return this.service.setCover(request);
+        return this.setCover(request);
     }
 }

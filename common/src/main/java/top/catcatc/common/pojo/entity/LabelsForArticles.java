@@ -1,5 +1,6 @@
 package top.catcatc.common.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -12,9 +13,10 @@ import lombok.Data;
 @TableName("labels_for_articles")
 public class LabelsForArticles {
     @JsonProperty("lfb_id")
-    Long lfbId;
+    @TableId("lfa_id")
+    private Long lfbId;
     @JsonProperty("l_id")
-    Long lId;
+    private Long lId;
     @JsonProperty("b_number")
-    String bNumber;
+    private String bNumber;
 }

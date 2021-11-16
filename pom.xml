@@ -13,6 +13,7 @@
         <module>controller</module>
         <module>service</module>
         <module>mapper</module>
+        <module>customer</module>
     </modules>
 
     <properties>

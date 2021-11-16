@@ -1,5 +1,6 @@
 package top.catcatc.common.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.Date;
 @TableName("blog")
 public class Blog {
     @JsonProperty("b_id")
+    @TableId("b_id")
     private Long bId;
 
     private String number;

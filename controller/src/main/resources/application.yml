@@ -1,8 +1,10 @@
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: top.catcatc.mapper.mapper
 server:
   port: 6002
+spring:
+  application:
+    name: blog-server

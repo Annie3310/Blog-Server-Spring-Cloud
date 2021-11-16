@@ -1,0 +1,10 @@
+server:
+  port: 6004
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 49.235.82.129:8848
+        namespace: c34fa560-f326-4907-a7e3-d8066c085d65
+  application:
+    name: blog-customer

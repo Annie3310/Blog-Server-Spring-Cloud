@@ -4,6 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("top.catcatc.mapper.mapper")
 @EnableTransactionManagement(proxyTargetClass = true)
 @EntityScan(basePackages = "top.catcatc.common")
+@EnableDiscoveryClient
 public class BlogApplication {
     public static void main(String[] args) {
         SpringApplication.run(BlogApplication.class, args);

@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        name: datasource
+        group: DEFAULT_GROUP
+        server-addr: 49.235.82.129:8848
+        file-extension: properties
+        namespace: c34fa560-f326-4907-a7e3-d8066c085d65
+        refresh-enabled: true
+
+        extension-configs[0]:
+          data-id: blog.properties
+          group: DEFAULT_GROUP
+          refresh: true
+      discovery:
+        server-addr: 49.235.82.129:8848
+        namespace: c34fa560-f326-4907-a7e3-d8066c085d65

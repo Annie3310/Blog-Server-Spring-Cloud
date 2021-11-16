@@ -26,6 +26,11 @@ public class BeanFactory {
         return restTemplateBuilder.build();
     }
 
+    @Bean("defaultRestTemplate")
+    public RestTemplate defaultRestTemplate() {
+        return new RestTemplate();
+    }
+
     /**
      * MyBatis-Plus 分页插件
      * @return 插件
