@@ -4,7 +4,7 @@ mybatis:
   mapper-locations: classpath*:mapper/*.xml
   type-aliases-package: top.catcatc.mapper.mapper
 server:
-  port: 6006
+  port: 6002
 spring:
   application:
     name: blog-server

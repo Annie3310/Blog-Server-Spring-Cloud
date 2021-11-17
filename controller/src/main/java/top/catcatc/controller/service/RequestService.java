@@ -3,7 +3,11 @@ package top.catcatc.controller.service;
 import top.catcatc.common.pojo.request.BlogSearchRequest;
 import top.catcatc.common.pojo.request.PageParam;
 import top.catcatc.common.pojo.request.SetCoverRequest;
-import top.catcatc.common.pojo.response.PublicResponse;
+import top.catcatc.common.pojo.response.ResponseResult;
+import top.catcatc.common.pojo.vo.BlogVO;
+import top.catcatc.common.pojo.vo.LabelVO;
+
+import java.util.List;
 
 /**
  * @author 王金义
@@ -16,7 +20,7 @@ public interface RequestService {
      * @param page 页码
      * @return 所有文章及用户信息
      */
-    PublicResponse listBlogs(PageParam page);
+    List<BlogVO> listBlogs(PageParam page);
 
     /**
      * 获取 number 的 blog
@@ -24,14 +28,14 @@ public interface RequestService {
      * @param number blog number
      * @return 查找到的 blog
      */
-    PublicResponse getBlog(String number);
+    BlogVO getBlog(String number);
 
     /**
      * 获取所有的 labels
      *
      * @return 所有的 labels
      */
-    PublicResponse listLabels();
+    List<LabelVO> listLabels();
 
     /**
      * 获取一个 blog 的所有 labels
@@ -39,7 +43,7 @@ public interface RequestService {
      * @param number blog number
      * @return labels
      */
-    PublicResponse listLabelsForBlog(String number);
+    List<LabelVO> listLabelsForBlog(String number);
 
     /**
      * 获取一个 label 的所有 blogs
@@ -48,33 +52,33 @@ public interface RequestService {
      * @param page 页码
      * @return 查找到的所有 blogs
      */
-    PublicResponse listBlogsByLabel(Long id, PageParam page);
+    List<BlogVO> listBlogsByLabel(Long id, PageParam page);
 
     /**
      * 依据 id 获取标签详情
      * @param id 标签 id
      * @return 标签详情
      */
-    PublicResponse getLabelById(Long id);
+    LabelVO getLabelById(Long id);
 
     /**
      * 获取状态为 Close 的文章
      * @param page 页码
      * @return 状态为 Close 的文章
      */
-    PublicResponse listArchive(PageParam page);
+    List<BlogVO> listArchive(PageParam page);
 
     /**
      * 标题, 正文搜索
      * @param request 关键词
      * @return 搜索到的结果
      */
-    PublicResponse search(BlogSearchRequest request);
+    List<BlogVO> search(BlogSearchRequest request);
 
     /**
      * 为 blog 设置封面
      * @param request blog number 和 封面地址
      * @return 执行信息
      */
-    PublicResponse setCover(SetCoverRequest request);
+    Boolean setCover(SetCoverRequest request);
 }

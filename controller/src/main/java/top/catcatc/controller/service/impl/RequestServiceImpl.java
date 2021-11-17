@@ -7,7 +7,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 import top.catcatc.service.impl.ArticleServiceImpl;
 import top.catcatc.service.impl.BlogServiceImpl;
@@ -28,7 +27,6 @@ import top.catcatc.common.pojo.entity.LabelsForArticles;
 import top.catcatc.common.pojo.request.BlogSearchRequest;
 import top.catcatc.common.pojo.request.PageParam;
 import top.catcatc.common.pojo.request.SetCoverRequest;
-import top.catcatc.common.pojo.response.PublicResponse;
 
 import java.util.*;
 import java.util.function.Function;
@@ -42,6 +40,10 @@ import java.util.stream.Collectors;
 public class RequestServiceImpl implements RequestService {
     @Value("${blog.page.limit}")
     private Integer LIMIT;
+
+    final static String BLOG_STATE_CLOSED = "closed";
+    final static String BLOG_STATE_OPEN = "open";
+    final static String SEARCH_URL = "https://api.github.com/search/issues?q=repo:Annie3310/blog+author:Annie3310+%s in:title,body&per_page=%d&page=%d&order=asc";
 
     final private BlogServiceImpl blogService;
     final private ArticleServiceImpl articleService;
@@ -58,16 +60,17 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public PublicResponse listBlogs(PageParam page) {
-        final List<BlogVO> blogVOList = this.listBlogs(page, "open");
-        return PublicResponse.success(blogVOList);
+    public List<BlogVO> listBlogs(PageParam page) {
+        return this.listBlogs(page, BLOG_STATE_OPEN);
     }
 
     @Override
-    public PublicResponse getBlog(String number) {
+    public BlogVO getBlog(String number) {
         // 通过 number 获取博客
-        final Optional<Blog> blogOptional = Optional.ofNullable(this.getBlogMapper(number));
-        final Blog blog = blogOptional.orElseThrow(() -> new BlogException(ResponseEnum.NO_BLOG));
+        final Blog blog = this.getBlogMapper(number);
+        if (Objects.isNull(blog)) {
+            return null;
+        }
 
         // 获取博文
         final Article article = this.getArticleMapper(number);
@@ -92,65 +95,67 @@ public class RequestServiceImpl implements RequestService {
             final Optional<List<LabelVO>> optionalLabelVOS = Optional.of(labelVOS);
             optionalLabelVOS.ifPresent(blogVO::setLabels);
         }
-        return PublicResponse.success(blogVO);
+        return blogVO;
     }
 
     @Override
-    public PublicResponse listLabels() {
+    public List<LabelVO> listLabels() {
         final Map<Long, Label> labelMap = this.listLabelsMapper();
 
-        Assert.notEmpty(labelMap, ResponseEnum.NO_LABELS.getMessage());
-
-        final List<LabelVO> labelVOS = labelMap.values().stream().map(Converter::labelVO).collect(Collectors.toList());
-        return PublicResponse.success(labelVOS);
-    }
-
-    @Override
-    public PublicResponse listLabelsForBlog(String number) {
-        final LabelsForArticlesDTO lfa = this.getLfaMapper(number);
-        if (Objects.nonNull(lfa)) {
-            final List<Label> labels = this.getLabelsMapper(lfa.getLId());
-            final List<LabelVO> labelVOList = labels.stream().map(Converter::labelVO).collect(Collectors.toList());
-            return PublicResponse.success(labelVOList);
+        if (labelMap.isEmpty()) {
+            return null;
         }
-        return PublicResponse.success();
+
+        return labelMap.values().stream().map(Converter::labelVO).collect(Collectors.toList());
     }
 
     @Override
-    public PublicResponse listBlogsByLabel(Long id, PageParam page) {
+    public List<LabelVO> listLabelsForBlog(String number) {
+        final LabelsForArticlesDTO lfa = this.getLfaMapper(number);
+        if (Objects.isNull(lfa)) {
+            return new ArrayList<>();
+        }
+        final List<Label> labels = this.getLabelsMapper(lfa.getLId());
+        return labels.stream().map(Converter::labelVO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BlogVO> listBlogsByLabel(Long id, PageParam page) {
         final List<String> numbers = this.listNumbersByLabelId(id);
 
-        Assert.notEmpty(numbers, ResponseEnum.NO_BLOGS_IN_THE_LABEL.getMessage());
+        if (numbers.isEmpty()) {
+            return null;
+        }
 
         final List<Blog> blogs = this.listBlogsMapper(new Page<>(page.getPage(), page.getLimit()), numbers);
 
         final Map<String, List<Long>> lfaMap = this.listLfaMapper(numbers);
 
-        List<BlogVO> blogVOList = this.listBlogs(blogs, lfaMap);
-        return PublicResponse.success(blogVOList);
+        return this.listBlogs(blogs, lfaMap);
     }
 
     @Override
-    public PublicResponse getLabelById(Long id) {
-        final LabelVO label = this.getLabelMapper(id);
-        return PublicResponse.success(label);
+    public LabelVO getLabelById(Long id) {
+        return this.getLabelMapper(id);
     }
 
     @Override
-    public PublicResponse listArchive(PageParam page) {
-        final String BLOG_STATE_CLOSED = "closed";
-        final List<BlogVO> blogVOList = this.listBlogs(page, BLOG_STATE_CLOSED);
-        return PublicResponse.success(blogVOList);
+    public List<BlogVO> listArchive(PageParam page) {
+        return this.listBlogs(page, BLOG_STATE_CLOSED);
     }
 
     @Override
-    public PublicResponse search(BlogSearchRequest request) {
-        final String url = "https://api.github.com/search/issues?q=repo:Annie3310/blog+author:Annie3310+%s in:title,body&per_page=%d&page=%d&order=asc";
-        final String formattedUrl = String.format(url, request.getKeyword(), request.getLimit(), request.getPage());
-        final Optional<SearchDTO> optionalResult = Optional.ofNullable(this.restTemplate.getForObject(formattedUrl, SearchDTO.class));
-        final SearchDTO result = optionalResult.orElseThrow(() -> new BlogException(ResponseEnum.SEARCH_NO_RESULT));
-        final Optional<List<BlogVO>> optionalItems = Optional.ofNullable(result.getItems());
-        final List<BlogVO> items = optionalItems.orElseThrow(() -> new BlogException(ResponseEnum.SEARCH_NO_RESULT));
+    public List<BlogVO> search(BlogSearchRequest request) {
+        final String formattedUrl = String.format(SEARCH_URL, request.getKeyword(), request.getLimit(), request.getPage());
+        final SearchDTO result = this.restTemplate.getForObject(formattedUrl, SearchDTO.class);
+        if (Objects.isNull(result)) {
+            return null;
+        }
+        final List<BlogVO> items = result.getItems();
+        if (Objects.isNull(items)) {
+            return null;
+        }
+
         final List<String> numbersList = items.stream().map(BlogVO::getNumber).collect(Collectors.toList());
         final Map<String, String> covers = this.getCovers(numbersList);
         items.forEach(o -> {
@@ -163,15 +168,12 @@ public class RequestServiceImpl implements RequestService {
                 o.setCover(cover);
             }
         });
-        return PublicResponse.success(items);
+        return items;
     }
 
     @Override
-    public PublicResponse setCover(SetCoverRequest request) {
-        if (this.setCoverMapper(request)) {
-            return PublicResponse.success();
-        }
-        return PublicResponse.error(ResponseEnum.SET_COVER_FAIL);
+    public Boolean setCover(SetCoverRequest request) {
+        return this.setCoverMapper(request);
     }
 
     private List<BlogVO> listBlogs(PageParam page, String state) {

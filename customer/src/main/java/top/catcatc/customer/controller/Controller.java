@@ -4,10 +4,13 @@ import org.springframework.web.bind.annotation.*;
 import top.catcatc.common.pojo.request.BlogSearchRequest;
 import top.catcatc.common.pojo.request.PageParam;
 import top.catcatc.common.pojo.request.SetCoverRequest;
-import top.catcatc.common.pojo.response.PublicResponse;
+import top.catcatc.common.pojo.response.ResponseResult;
+import top.catcatc.common.pojo.vo.BlogVO;
+import top.catcatc.common.pojo.vo.LabelVO;
 import top.catcatc.customer.feigon.Customer;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author 王金义
@@ -27,47 +30,47 @@ public class Controller {
     }
 
     @GetMapping("list/blogs")
-    public PublicResponse listBlogs(@Valid PageParam page) {
+    public ResponseResult<List<BlogVO>> listBlogs(@Valid PageParam page) {
         return this.customer.listBlogs(page.getPage(), page.getLimit());
     }
 
     @GetMapping("get/blog/{number}")
-    public PublicResponse getBlog(@PathVariable String number) {
+    public ResponseResult<BlogVO> getBlog(@PathVariable String number) {
         return this.customer.getBlog(number);
     }
 
     @GetMapping("list/labels")
-    public PublicResponse listLabels() {
+    public ResponseResult<List<LabelVO>> listLabels() {
         return this.customer.listLabels();
     }
 
     @GetMapping("list/labels/blog/{number}")
-    public PublicResponse getLabelsByBlogNumber(@PathVariable String number) {
+    public ResponseResult<List<LabelVO>> getLabelsByBlogNumber(@PathVariable String number) {
         return this.customer.getLabelsByBlogNumber(number);
     }
 
     @GetMapping("list/blogs/label/{id}")
-    public PublicResponse listBlogsByLabelId(@Valid PageParam page, @PathVariable Long id) {
+    public ResponseResult<List<BlogVO>> listBlogsByLabelId(@Valid PageParam page, @PathVariable Long id) {
         return this.customer.listBlogsByLabelId(page.getPage(), page.getLimit(), id);
     }
 
     @GetMapping("get/label/{id}")
-    public PublicResponse getLabel(@PathVariable Long id) {
+    public ResponseResult<LabelVO> getLabel(@PathVariable Long id) {
         return this.customer.getLabel(id);
     }
 
     @GetMapping("list/archive")
-    public PublicResponse listArchive(@Valid PageParam page) {
+    public ResponseResult<List<BlogVO>> listArchive(@Valid PageParam page) {
         return this.listArchive(page);
     }
 
     @GetMapping("search/blogs")
-    public PublicResponse search(@Valid BlogSearchRequest request) {
+    public ResponseResult<List<BlogVO>> search(@Valid BlogSearchRequest request) {
         return this.customer.search(request.getKeyword(), request.getPage(), request.getLimit());
     }
 
     @PutMapping("set/cover")
-    public PublicResponse setCover(@Valid @RequestBody SetCoverRequest request) {
+    public ResponseResult<Boolean> setCover(@Valid @RequestBody SetCoverRequest request) {
         return this.setCover(request);
     }
 }
