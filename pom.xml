@@ -66,4 +66,12 @@
         </dependencies>
     </dependencyManagement>
 
+    <distributionManagement>
+        <repository>
+            <id>coding</id>
+            <name>Coding Repository</name>
+            <url>https://annie3310-maven.pkg.coding.net/repository/blog/blog</url>
+        </repository>
+    </distributionManagement>
+
 </project>
