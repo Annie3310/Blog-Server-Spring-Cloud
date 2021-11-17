@@ -61,7 +61,7 @@ public class Controller {
 
     @GetMapping("list/archive")
     public ResponseResult<List<BlogVO>> listArchive(@Valid PageParam page) {
-        return this.listArchive(page);
+        return this.customer.listArchive(page.getPage(), page.getLimit());
     }
 
     @GetMapping("search/blogs")
@@ -71,6 +71,6 @@ public class Controller {
 
     @PutMapping("set/cover")
     public ResponseResult<Boolean> setCover(@Valid @RequestBody SetCoverRequest request) {
-        return this.setCover(request);
+        return this.customer.setCover(request);
     }
 }
