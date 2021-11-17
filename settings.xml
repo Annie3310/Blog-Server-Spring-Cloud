@@ -11,6 +11,16 @@
         </mirror>
     </mirrors>
 
+    <!-- omitted xml -->
+    <!-- 请妥善保管好您的配置，不要随意分享给他人 -->
+    <servers>
+        <server>
+            <id>annie3310-blog-blog</id>
+            <username>blog-1637132875161</username>
+            <password>655633c08bb8d065a4e8ac7ce3c9e871817b24a4</password>
+        </server>
+    </servers>
+
     <!--<activeProfiles>
         <activeProfile>nexus</activeProfile>
     </activeProfiles>-->
