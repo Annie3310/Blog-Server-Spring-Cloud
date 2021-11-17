@@ -66,11 +66,13 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- omitted xml -->
     <distributionManagement>
         <repository>
-            <id>coding</id>
-            <name>Coding Repository</name>
-            <url>https://annie3310-maven.pkg.coding.net/repository/blog/blog</url>
+            <!--必须与 settings.xml 的 id 一致-->
+            <id>annie3310-blog-blog</id>
+            <name>blog</name>
+            <url>https://annie3310-maven.pkg.coding.net/repository/blog/blog/</url>
         </repository>
     </distributionManagement>
 
