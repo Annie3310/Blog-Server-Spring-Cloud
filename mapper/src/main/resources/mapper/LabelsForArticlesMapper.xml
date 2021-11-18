@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="top.catcatc.mapper.mapper.LabelsForArticlesMapper">
+<mapper namespace="top.cattycat.mapper.mapper.LabelsForArticlesMapper">
 
-    <resultMap id="lfaMap" type="top.catcatc.common.pojo.dto.LabelsForArticlesDTO">
+    <resultMap id="lfaMap" type="top.cattycat.common.pojo.dto.LabelsForArticlesDTO">
         <result column="b_number" property="bNumber"/>
         <collection property="lId" ofType="java.lang.Long" javaType="java.util.List">
             <result column="l_id"/>

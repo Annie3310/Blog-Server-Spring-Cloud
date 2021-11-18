@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>top.catcatc</groupId>
+    <groupId>top.cattycat</groupId>
     <artifactId>blog-server</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0</version>
@@ -66,14 +66,14 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- omitted xml -->
+<!--    &lt;!&ndash; omitted xml &ndash;&gt;
     <distributionManagement>
         <repository>
-            <!--必须与 settings.xml 的 id 一致-->
+            &lt;!&ndash;必须与 settings.xml 的 id 一致&ndash;&gt;
             <id>annie3310-blog-blog</id>
             <name>blog</name>
             <url>https://annie3310-maven.pkg.coding.net/repository/blog/blog/</url>
         </repository>
-    </distributionManagement>
+    </distributionManagement>-->
 
 </project>

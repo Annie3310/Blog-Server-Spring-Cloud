@@ -2,7 +2,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath*:mapper/*.xml
-  type-aliases-package: top.catcatc.mapper.mapper
+  type-aliases-package: top.cattycat.mapper.mapper
 server:
   port: 6002
 spring:

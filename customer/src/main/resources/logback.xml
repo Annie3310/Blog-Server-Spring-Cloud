@@ -52,7 +52,7 @@
         </rollingPolicy>
     </appender>-->
 
-    <logger name="top.catcatc.mapper.mapper" level="debug"/>
+    <logger name="top.cattycat.mapper.mapper" level="debug"/>
 
     <root level="info">
         <appender-ref ref="consoleLog"/>
