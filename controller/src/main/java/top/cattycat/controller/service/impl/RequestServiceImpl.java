@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import top.cattycat.controller.config.BlogConfig;
 import top.cattycat.service.impl.ArticleServiceImpl;
 import top.cattycat.service.impl.BlogServiceImpl;
 import top.cattycat.service.impl.LabelServiceImpl;
@@ -38,8 +38,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RequestServiceImpl implements RequestService {
-    @Value("${blog.page.limit}")
-    private Integer LIMIT;
+    final private BlogConfig blogConfig;
 
     final static String BLOG_STATE_CLOSED = "closed";
     final static String BLOG_STATE_OPEN = "open";
@@ -51,7 +50,8 @@ public class RequestServiceImpl implements RequestService {
     final private LabelsForArticlesServiceImpl labelsForArticlesService;
     final private RestTemplate restTemplate;
 
-    public RequestServiceImpl(BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate) {
+    public RequestServiceImpl(BlogConfig blogConfig, BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate) {
+        this.blogConfig = blogConfig;
         this.blogService = blogService;
         this.articleService = articleService;
         this.labelService = labelService;
@@ -177,7 +177,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     private List<BlogVO> listBlogs(PageParam page, String state) {
-        final PageParam pageParam = Optional.ofNullable(page).orElseGet(() -> new PageParam(1, this.LIMIT));
+        final PageParam pageParam = Optional.ofNullable(page).orElseGet(() -> new PageParam(1, this.blogConfig.getPage().getLimit()));
         final Optional<List<Blog>> optionalBlogs = Optional.ofNullable(this.listBlogsMapper(new Page<>(pageParam.getPage(), pageParam.getLimit()), state));
         // 获取博客
         final List<Blog> blogs = optionalBlogs.orElseThrow(() -> new BlogException(ResponseEnum.NO_BLOG));

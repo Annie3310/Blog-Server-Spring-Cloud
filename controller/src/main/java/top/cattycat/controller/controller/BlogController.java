@@ -4,7 +4,7 @@ import top.cattycat.common.enums.ResponseEnum;
 import top.cattycat.common.pojo.response.ResponseFactory;
 import top.cattycat.common.pojo.vo.BlogVO;
 import top.cattycat.common.pojo.vo.LabelVO;
-import top.cattycat.controller.config.GitHubConfig;
+import top.cattycat.controller.config.BlogConfig;
 import top.cattycat.controller.service.RequestService;
 import top.cattycat.controller.service.impl.RequestServiceImpl;
 import top.cattycat.common.pojo.request.BlogSearchRequest;
@@ -26,16 +26,16 @@ import java.util.Objects;
 @RestController
 public class BlogController {
     private final RequestService service;
-    private final GitHubConfig gitHubConfig;
+    private final BlogConfig blogConfig;
 
-    public BlogController(RequestServiceImpl service, GitHubConfig gitHubConfig) {
+    public BlogController(RequestServiceImpl service, BlogConfig blogConfig) {
         this.service = service;
-        this.gitHubConfig = gitHubConfig;
+        this.blogConfig = blogConfig;
     }
 
-    @GetMapping("github")
-    public String github() {
-        return gitHubConfig.getSecret();
+    @GetMapping("blog")
+    public Object blog() {
+        return blogConfig.getUsername();
     }
 
     @GetMapping("list/blogs")

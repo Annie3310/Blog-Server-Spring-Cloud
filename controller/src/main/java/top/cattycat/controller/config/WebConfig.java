@@ -1,4 +1,4 @@
-package top.cattycat.common.config;
+package top.cattycat.controller.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

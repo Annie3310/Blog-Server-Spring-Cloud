@@ -1,13 +1,11 @@
-package top.cattycat.common.config;
+package top.cattycat.controller.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -16,20 +14,23 @@ import org.springframework.web.client.RestTemplate;
  */
 @Configuration
 public class BeanFactory {
-    @Value("${github.token}")
-    private String token;
+    final private GitHubConfig gitHubConfig;
+
+    public BeanFactory(GitHubConfig gitHubConfig) {
+        this.gitHubConfig = gitHubConfig;
+    }
 
     @Bean
     public RestTemplate restTemplate() {
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
         restTemplateBuilder.defaultHeader("accept", "application/vnd.github.v3+json");
-        restTemplateBuilder.defaultHeader("Authorization", token);
+        restTemplateBuilder.defaultHeader("Authorization", this.gitHubConfig.getToken());
         return restTemplateBuilder.build();
     }
 
     /**
      * 默认的 restTemplate
-     * @return
+     * @return 默认的 restTemplate
      */
     @Bean("defaultRestTemplate")
     public RestTemplate defaultRestTemplate() {
