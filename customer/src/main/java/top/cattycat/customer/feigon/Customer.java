@@ -6,6 +6,7 @@ import top.cattycat.common.pojo.request.SetCoverRequest;
 import top.cattycat.common.pojo.response.ResponseResult;
 import top.cattycat.common.pojo.vo.BlogVO;
 import top.cattycat.common.pojo.vo.LabelVO;
+import top.cattycat.common.pojo.vo.SearchVO;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public interface Customer {
     ResponseResult<List<BlogVO>> listArchive(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit);
 
     @GetMapping("search/blogs")
-    ResponseResult<List<BlogVO>> search(@RequestParam("keyword") String keyword, @RequestParam("page") Integer page, @RequestParam("limit") Integer limit);
+    ResponseResult<List<SearchVO>> search(@RequestParam("keyword") String keyword, @RequestParam("page") Integer page, @RequestParam("limit") Integer limit);
 
     @PutMapping("set/cover")
     ResponseResult<Boolean> setCover(@RequestBody SetCoverRequest request);

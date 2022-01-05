@@ -7,6 +7,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import top.cattycat.common.pojo.vo.SearchVO;
 import top.cattycat.controller.config.BlogConfig;
 import top.cattycat.service.impl.ArticleServiceImpl;
 import top.cattycat.service.impl.BlogServiceImpl;
@@ -145,18 +146,18 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public List<BlogVO> search(BlogSearchRequest request) {
+    public List<SearchVO> search(BlogSearchRequest request) {
         final String formattedUrl = String.format(SEARCH_URL, request.getKeyword(), request.getLimit(), request.getPage());
         final SearchDTO result = this.restTemplate.getForObject(formattedUrl, SearchDTO.class);
         if (Objects.isNull(result)) {
             return null;
         }
-        final List<BlogVO> items = result.getItems();
+        final List<SearchVO> items = result.getItems();
         if (Objects.isNull(items)) {
             return null;
         }
 
-        final List<String> numbersList = items.stream().map(BlogVO::getNumber).collect(Collectors.toList());
+        final List<String> numbersList = items.stream().map(SearchVO::getNumber).collect(Collectors.toList());
         final Map<String, String> covers = this.getCovers(numbersList);
         items.forEach(o -> {
             final List<LabelVO> labelVOS = this.setWellNumber(Converter.setFontColor(o.getLabels()));

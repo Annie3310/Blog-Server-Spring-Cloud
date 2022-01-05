@@ -5,6 +5,7 @@ import top.cattycat.common.pojo.request.PageParam;
 import top.cattycat.common.pojo.request.SetCoverRequest;
 import top.cattycat.common.pojo.vo.BlogVO;
 import top.cattycat.common.pojo.vo.LabelVO;
+import top.cattycat.common.pojo.vo.SearchVO;
 
 import java.util.List;
 
@@ -72,7 +73,7 @@ public interface RequestService {
      * @param request 关键词
      * @return 搜索到的结果
      */
-    List<BlogVO> search(BlogSearchRequest request);
+    List<SearchVO> search(BlogSearchRequest request);
 
     /**
      * 为 blog 设置封面
