@@ -17,6 +17,7 @@ import java.util.List;
  * @date 2021/11/16
  */
 @RestController
+@CrossOrigin("http://49.235.82.129:3000")
 public class Controller {
     final private Customer customer;
 

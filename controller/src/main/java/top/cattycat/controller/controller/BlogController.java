@@ -24,6 +24,7 @@ import java.util.Objects;
  * @date 2021/8/30
  */
 @RestController
+@CrossOrigin({"http://49.235.82.129:6004/", "https://blog.cattycat.top"})
 public class BlogController {
     private final RequestService service;
     private final BlogConfig blogConfig;
