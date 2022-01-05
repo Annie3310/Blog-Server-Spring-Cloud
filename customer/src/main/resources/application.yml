@@ -4,7 +4,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 49.235.82.129:8848
-        namespace: c34fa560-f326-4907-a7e3-d8066c085d65
+#        server-addr: 49.235.82.129:8848
+#        namespace: c34fa560-f326-4907-a7e3-d8066c085d65
+        server-addr: 139.224.22.206:8848
+        namespace: 7d120ccb-cd34-43c4-8002-644c8df20293
   application:
     name: blog-customer
