@@ -1,8 +1,6 @@
 package top.cattycat.controller.config;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
