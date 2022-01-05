@@ -4,6 +4,7 @@ import top.cattycat.common.enums.ResponseEnum;
 import top.cattycat.common.pojo.response.ResponseFactory;
 import top.cattycat.common.pojo.vo.BlogVO;
 import top.cattycat.common.pojo.vo.LabelVO;
+import top.cattycat.common.pojo.vo.SearchVO;
 import top.cattycat.controller.config.BlogConfig;
 import top.cattycat.controller.service.RequestService;
 import top.cattycat.controller.service.impl.RequestServiceImpl;
@@ -24,7 +25,7 @@ import java.util.Objects;
  * @date 2021/8/30
  */
 @RestController
-@CrossOrigin({"http://49.235.82.129:6004/", "https://blog.cattycat.top"})
+//@CrossOrigin({"http://49.235.82.129:6004/", "https://blog.cattycat.top"})
 public class BlogController {
     private final RequestService service;
     private final BlogConfig blogConfig;
@@ -90,9 +91,9 @@ public class BlogController {
     }
 
     @GetMapping("search/blogs")
-    public ResponseResult<List<BlogVO>> search(@Valid BlogSearchRequest request) {
-        final List<BlogVO> result = this.service.search(request);
-        final ResponseFactory<List<BlogVO>> resultFactory = new ResponseFactory<>();
+    public ResponseResult<List<SearchVO>> search(@Valid BlogSearchRequest request) {
+        final List<SearchVO> result = this.service.search(request);
+        final ResponseFactory<List<SearchVO>> resultFactory = new ResponseFactory<>();
         if (Objects.isNull(request)) {
             return resultFactory.error(ResponseEnum.SEARCH_NO_RESULT);
         }

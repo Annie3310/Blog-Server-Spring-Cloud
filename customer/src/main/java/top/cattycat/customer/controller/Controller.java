@@ -7,6 +7,7 @@ import top.cattycat.common.pojo.request.SetCoverRequest;
 import top.cattycat.common.pojo.response.ResponseResult;
 import top.cattycat.common.pojo.vo.BlogVO;
 import top.cattycat.common.pojo.vo.LabelVO;
+import top.cattycat.common.pojo.vo.SearchVO;
 import top.cattycat.customer.feigon.Customer;
 
 import javax.validation.Valid;
@@ -17,7 +18,7 @@ import java.util.List;
  * @date 2021/11/16
  */
 @RestController
-@CrossOrigin("http://49.235.82.129:3000")
+//@CrossOrigin("http://49.235.82.129:3000")
 public class Controller {
     final private Customer customer;
 
@@ -66,7 +67,7 @@ public class Controller {
     }
 
     @GetMapping("search/blogs")
-    public ResponseResult<List<BlogVO>> search(@Valid BlogSearchRequest request) {
+    public ResponseResult<List<SearchVO>> search(@Valid BlogSearchRequest request) {
         return this.customer.search(request.getKeyword(), request.getPage(), request.getLimit());
     }
 
