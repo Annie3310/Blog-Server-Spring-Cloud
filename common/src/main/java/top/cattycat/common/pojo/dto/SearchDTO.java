@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import top.cattycat.common.pojo.vo.BlogVO;
+import top.cattycat.common.pojo.vo.SearchVO;
 
 import java.util.List;
 
@@ -22,5 +23,5 @@ public class SearchDTO {
     Integer totalCount;
     @JsonProperty("incomplete_results")
     Boolean incompleteResults;
-    List<BlogVO> items;
+    List<SearchVO> items;
 }
