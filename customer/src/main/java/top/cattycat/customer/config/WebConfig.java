@@ -8,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author 王金义
  * @date 2022/01/05
  */
-//@Configuration
+@Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // 设置允许跨域的路径
+                // 设置允许跨域的路径
         registry.addMapping("/**")
                 // 设置允许跨域请求的域名
                 .allowedOriginPatterns("*")
