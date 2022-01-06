@@ -12,6 +12,15 @@ import java.util.Set;
 public class BlogConfig {
     private Set<String> username;
     private Page page;
+    private SearchLimit searchLimit;
+
+    public SearchLimit getSearchLimit() {
+        return searchLimit;
+    }
+
+    public void setSearchLimit(SearchLimit searchLimit) {
+        this.searchLimit = searchLimit;
+    }
 
     public Set<String> getUsername() {
         return username;
@@ -37,6 +46,18 @@ public class BlogConfig {
         }
 
         public void setLimit(Integer limit) {
+            this.limit = limit;
+        }
+    }
+
+    public static class SearchLimit {
+        private Long limit;
+
+        public Long getLimit() {
+            return limit;
+        }
+
+        public void setLimit(Long limit) {
             this.limit = limit;
         }
     }
