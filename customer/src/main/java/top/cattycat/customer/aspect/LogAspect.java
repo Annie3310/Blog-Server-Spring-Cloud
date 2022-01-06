@@ -29,24 +29,12 @@ public class LogAspect {
     public void all() {
     }
 
-    @Pointcut("execution(* top.cattycat.customer.controller.Controller.search(..))")
-    public void search() {}
-
     @Around("all()")
-    public Object setCrossOriginResponseHeader(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
         final Object[] args = joinPoint.getArgs();
         final ResponseResult proceed = (ResponseResult) joinPoint.proceed();
         logger.info("方法名: {}", joinPoint.getSignature().getName());
         logger.info("处理结果: {}", proceed.getMessage());
         return proceed;
-    }
-
-//    @Before("search()")
-    public void searchLimit() {
-        final RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        //从获取RequestAttributes中获取HttpServletRequest的信息
-        final HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
-        final String id = request.getSession().getId();
-        //使用 Redis 分布式锁限制搜索次数 (需要买 Redis)
     }
 }
