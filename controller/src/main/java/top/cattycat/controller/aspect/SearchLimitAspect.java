@@ -51,6 +51,7 @@ public class SearchLimitAspect {
         //从获取RequestAttributes中获取HttpServletRequest的信息
         final HttpServletRequest request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
         final String ip = this.getIP(request);
+        logger.info("ip: {}", ip);
 
         // nacos 配置文件中关于搜索限制的配置
         final BlogConfig.SearchLimit searchLimit = this.blogConfig.getSearchLimit();
