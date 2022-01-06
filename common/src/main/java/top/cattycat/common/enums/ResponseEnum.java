@@ -8,6 +8,7 @@ package top.cattycat.common.enums;
  */
 public enum ResponseEnum {
     SUCCESS("00000", "Success"),
+    SERVER_ERROR("B0001", "服务端错误"),
 
     SEARCH_NO_RESULT("B0001", "没有搜索到结果"),
     NO_BLOG("B0001", "没有博客"),
@@ -17,7 +18,6 @@ public enum ResponseEnum {
     TOO_MANY_REQUEST("A0501","请求过于频繁, 请稍后再试"),
 
     SET_COVER_FAIL("B0001", "设置封面失败");
-
 
     String code;
     String message;
