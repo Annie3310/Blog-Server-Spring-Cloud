@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement(proxyTargetClass = true)
 @EntityScan(basePackages = "top.cattycat.common")
 @EnableDiscoveryClient
-@ConfigurationPropertiesScan("top.cattycat.controller.config")
+@ConfigurationPropertiesScan("top.cattycat.common.config")
 public class BlogApplication {
     public static void main(String[] args) {
         SpringApplication.run(BlogApplication.class, args);
