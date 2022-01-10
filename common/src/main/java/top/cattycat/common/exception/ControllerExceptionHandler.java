@@ -31,7 +31,7 @@ public class ControllerExceptionHandler {
     public ResponseResult handleHttpClientErrorException(HttpClientErrorException e) {
         logger.warn(e.getMessage());
         logger.warn(Arrays.toString(e.getStackTrace()));
-        return new ResponseFactory().error(ResponseEnum.TOO_MANY_REQUEST);
+        return new ResponseFactory().error(ResponseEnum.HTTP_REQUEST_EXCEPTION);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
