@@ -1,11 +1,11 @@
 package top.cattycat.controller.controller;
 
+import top.cattycat.common.config.BlogConfig;
 import top.cattycat.common.enums.ResponseEnum;
 import top.cattycat.common.pojo.response.ResponseFactory;
 import top.cattycat.common.pojo.vo.BlogVO;
 import top.cattycat.common.pojo.vo.LabelVO;
 import top.cattycat.common.pojo.vo.SearchVO;
-import top.cattycat.controller.config.BlogConfig;
 import top.cattycat.controller.service.RequestService;
 import top.cattycat.controller.service.impl.RequestServiceImpl;
 import top.cattycat.common.pojo.request.BlogSearchRequest;
@@ -25,7 +25,6 @@ import java.util.Objects;
  * @date 2021/8/30
  */
 @RestController
-//@CrossOrigin({"http://49.235.82.129:6004/", "https://blog.cattycat.top"})
 public class BlogController {
     private final RequestService service;
     private final BlogConfig blogConfig;
