@@ -7,8 +7,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import top.cattycat.common.config.BlogConfig;
 import top.cattycat.common.pojo.vo.SearchVO;
-import top.cattycat.controller.config.BlogConfig;
 import top.cattycat.service.impl.ArticleServiceImpl;
 import top.cattycat.service.impl.BlogServiceImpl;
 import top.cattycat.service.impl.LabelServiceImpl;
@@ -41,9 +41,9 @@ import java.util.stream.Collectors;
 public class RequestServiceImpl implements RequestService {
     final private BlogConfig blogConfig;
 
-    final static String BLOG_STATE_CLOSED = "closed";
-    final static String BLOG_STATE_OPEN = "open";
-    final static String SEARCH_URL = "https://api.github.com/search/issues?q=repo:Annie3310/blog+author:Annie3310+%s in:title,body&per_page=%d&page=%d&order=asc";
+    private final static String BLOG_STATE_CLOSED = "closed";
+    private final static String BLOG_STATE_OPEN = "open";
+    private final static String SEARCH_URL = "https://api.github.com/search/issues?q=repo:Annie3310/blog+author:Annie3310+%s in:title,body&per_page=%d&page=%d&order=asc";
 
     final private BlogServiceImpl blogService;
     final private ArticleServiceImpl articleService;

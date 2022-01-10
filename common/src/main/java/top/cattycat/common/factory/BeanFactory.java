@@ -1,4 +1,4 @@
-package top.cattycat.controller.config;
+package top.cattycat.common.factory;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -7,6 +7,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import top.cattycat.common.config.GitHubConfig;
 
 /**
  * @author 王金义
