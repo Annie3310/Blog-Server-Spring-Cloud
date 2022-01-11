@@ -14,4 +14,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class GitHubConfig {
     private String secret;
     private String token;
+    private Oauth oauth;
+
+    @Getter
+    @Setter
+    public static class Oauth {
+        private String clientId;
+        private String secret;
+    }
 }
