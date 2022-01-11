@@ -1,6 +1,7 @@
 package top.cattycat.controller.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +25,14 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping("login/oauth/github")
 public class Login {
     private final UserService userService;
-    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisTemplate stringRedisTemplate;
 
     private final static String USER_ACCESS_TOKEN_TEMPLATE = "user-access-token-%s";
     private final static String USER_JWT_TOKEN_TEMPLATE = "user-jwt-token-%s";
 
-    public Login(UserService userService, StringRedisTemplate stringRedisTemplate) {
+    public Login(UserService userService, RedisTemplate redisTemplate) {
         this.userService = userService;
-        this.stringRedisTemplate = stringRedisTemplate;
+        this.stringRedisTemplate = redisTemplate;
     }
 
     @GetMapping("/authorize")
