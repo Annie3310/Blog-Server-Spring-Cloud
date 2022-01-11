@@ -21,6 +21,7 @@ public enum ResponseEnum {
     REGISTER_FAILED("B0001", "注册失败"),
     CONNECT_TO_GITHUB_FAILED("B0001", "连接到 GitHub 服务器时失败"),
     AUTHORIZATION_FAILED("B0001", "认证失败"),
+    LOGIN_IS_NOT_COMPLETE("B0001", "尚未认证"),
 
     SET_COVER_FAIL("B0001", "设置封面失败");
 
