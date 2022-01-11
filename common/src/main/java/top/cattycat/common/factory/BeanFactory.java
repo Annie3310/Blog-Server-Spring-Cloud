@@ -6,8 +6,12 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import top.cattycat.common.config.GitHubConfig;
+
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 
 /**
  * @author 王金义
@@ -38,6 +42,20 @@ public class BeanFactory {
         return new RestTemplate();
     }
 
+    @Bean("restTemplateWithProxy")
+    public RestTemplate restTemplateWithProxy() {
+        final RestTemplate restTemplate = new RestTemplate();
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setProxy(
+                new Proxy(
+                        Proxy.Type.HTTP,
+                        //设置代理服务
+                        new InetSocketAddress("127.0.0.1", 4780)
+                )
+        );
+        restTemplate.setRequestFactory(requestFactory);
+        return restTemplate;
+    }
     /**
      * MyBatis-Plus 分页插件
      * @return 插件
