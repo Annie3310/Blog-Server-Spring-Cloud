@@ -1,5 +1,6 @@
 package top.cattycat.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -42,7 +43,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public GitHubGetAccessTokenResponse getAccessToken(GitHubAuthorizationResponse response) {
-        // TODO verify state
+
         final GitHubAccessTokenRequest accessTokenRequestBody = this.getAccessTokenRequestBody(response);
         final HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", "application/json");
@@ -59,8 +60,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public boolean isRegistered(Long id) {
-        final QueryWrapper<User> wrapper = new QueryWrapper<>();
-        wrapper.select("1").eq("id", id);
+        final LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(User::getGId).eq(User::getGId, id);
         final User one = this.getOne(wrapper);
         return Objects.nonNull(one);
     }
