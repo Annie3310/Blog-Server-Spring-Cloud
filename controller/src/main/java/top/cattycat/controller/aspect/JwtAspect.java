@@ -1,13 +1,11 @@
 package top.cattycat.controller.aspect;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.auth.AUTH;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -25,11 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 @Order(1)
 public class JwtAspect {
-    private final StringRedisTemplate stringRedisTemplate;
-
-    public JwtAspect(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
 
     @Pointcut("execution(* top.cattycat.controller.controller.BlogController.search(..))")
     void search() {}
