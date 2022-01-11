@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.jsonwebtoken.Claims;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -57,6 +59,7 @@ public class RequestServiceImpl implements RequestService {
     private final ArticleServiceImpl articleService;
     private final LabelServiceImpl labelService;
     private final LabelsForArticlesServiceImpl labelsForArticlesService;
+    @Qualifier("restTemplateWithProxy")
     private final RestTemplate restTemplate;
     private final HttpServletRequest request;
     private final RedisTemplate redisTemplate;
