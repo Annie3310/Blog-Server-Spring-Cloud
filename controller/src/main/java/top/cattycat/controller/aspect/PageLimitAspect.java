@@ -4,6 +4,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import top.cattycat.common.config.BlogConfig;
 import top.cattycat.common.pojo.request.PageParam;
@@ -17,6 +18,7 @@ import java.util.Objects;
  * @date 2021/11/15
  */
 @Aspect
+@Order(2)
 @Component
 public class PageLimitAspect {
     private final BlogConfig blogConfig;
