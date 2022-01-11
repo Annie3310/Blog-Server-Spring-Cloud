@@ -3,16 +3,18 @@ package top.cattycat.controller.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import io.jsonwebtoken.Claims;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import top.cattycat.common.config.BlogConfig;
 import top.cattycat.common.pojo.vo.SearchVO;
+import top.cattycat.common.util.JwtUtils;
 import top.cattycat.service.impl.ArticleServiceImpl;
 import top.cattycat.service.impl.BlogServiceImpl;
 import top.cattycat.service.impl.LabelServiceImpl;
@@ -49,6 +51,7 @@ public class RequestServiceImpl implements RequestService {
     private final static String BLOG_STATE_CLOSED = "closed";
     private final static String BLOG_STATE_OPEN = "open";
     private final static String SEARCH_URL = "https://api.github.com/search/issues?q=repo:Annie3310/blog+author:Annie3310+%s in:title,body&per_page=%d&page=%d&order=asc";
+    private final static String USER_ACCESS_TOKEN_TEMPLATE = "user-access-token-%s";
 
     private final BlogServiceImpl blogService;
     private final ArticleServiceImpl articleService;
@@ -56,8 +59,9 @@ public class RequestServiceImpl implements RequestService {
     private final LabelsForArticlesServiceImpl labelsForArticlesService;
     private final RestTemplate restTemplate;
     private final HttpServletRequest request;
+    private final RedisTemplate redisTemplate;
 
-    public RequestServiceImpl(BlogConfig blogConfig, BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate, HttpServletRequest request) {
+    public RequestServiceImpl(BlogConfig blogConfig, BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate, HttpServletRequest request, RedisTemplate redisTemplate) {
         this.blogConfig = blogConfig;
         this.blogService = blogService;
         this.articleService = articleService;
@@ -65,6 +69,7 @@ public class RequestServiceImpl implements RequestService {
         this.labelsForArticlesService = labelsForArticlesService;
         this.restTemplate = restTemplate;
         this.request = request;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
@@ -156,7 +161,11 @@ public class RequestServiceImpl implements RequestService {
     public List<SearchVO> search(BlogSearchRequest request) {
         final String formattedUrl = String.format(SEARCH_URL, request.getKeyword(), request.getLimit(), request.getPage());
         final HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", this.request.getHeader("Authorization"));
+        final String authorization = this.request.getHeader("Authorization");
+        final String id = JwtUtils.parseToken(authorization).get("id", String.class);
+        final String accessToken = String.valueOf(this.redisTemplate.opsForValue().get(String.format(USER_ACCESS_TOKEN_TEMPLATE, id)));
+
+        headers.add("Authorization", accessToken);
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
         final SearchDTO result = this.restTemplate.exchange(formattedUrl, HttpMethod.GET, httpEntity, SearchDTO.class).getBody();
         if (Objects.isNull(result)) {
