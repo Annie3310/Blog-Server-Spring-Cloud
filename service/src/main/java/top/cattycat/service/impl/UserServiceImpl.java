@@ -49,10 +49,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         HttpEntity<GitHubAccessTokenRequest> httpEntity = new HttpEntity<>(accessTokenRequestBody, headers);
         GitHubGetAccessTokenResponse accessTokenResponse;
         try {
-             accessTokenResponse = this.restTemplate.postForObject(GET_ACCESS_TOKEN_URI, httpEntity, GitHubGetAccessTokenResponse.class);
+            accessTokenResponse = this.restTemplate.postForObject(GET_ACCESS_TOKEN_URI, httpEntity, GitHubGetAccessTokenResponse.class);
         } catch (Exception e) {
             throw new BlogException(ResponseEnum.HTTP_REQUEST_EXCEPTION);
         }
+
         return accessTokenResponse;
     }
 
