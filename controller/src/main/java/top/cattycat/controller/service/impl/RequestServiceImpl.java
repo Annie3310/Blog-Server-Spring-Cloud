@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import top.cattycat.common.config.BlogConfig;
@@ -29,6 +33,7 @@ import top.cattycat.common.pojo.request.BlogSearchRequest;
 import top.cattycat.common.pojo.request.PageParam;
 import top.cattycat.common.pojo.request.SetCoverRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -39,25 +44,27 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RequestServiceImpl implements RequestService {
-    final private BlogConfig blogConfig;
+    private final BlogConfig blogConfig;
 
     private final static String BLOG_STATE_CLOSED = "closed";
     private final static String BLOG_STATE_OPEN = "open";
     private final static String SEARCH_URL = "https://api.github.com/search/issues?q=repo:Annie3310/blog+author:Annie3310+%s in:title,body&per_page=%d&page=%d&order=asc";
 
-    final private BlogServiceImpl blogService;
-    final private ArticleServiceImpl articleService;
-    final private LabelServiceImpl labelService;
-    final private LabelsForArticlesServiceImpl labelsForArticlesService;
-    final private RestTemplate restTemplate;
+    private final BlogServiceImpl blogService;
+    private final ArticleServiceImpl articleService;
+    private final LabelServiceImpl labelService;
+    private final LabelsForArticlesServiceImpl labelsForArticlesService;
+    private final RestTemplate restTemplate;
+    private final HttpServletRequest request;
 
-    public RequestServiceImpl(BlogConfig blogConfig, BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate) {
+    public RequestServiceImpl(BlogConfig blogConfig, BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate, HttpServletRequest request) {
         this.blogConfig = blogConfig;
         this.blogService = blogService;
         this.articleService = articleService;
         this.labelService = labelService;
         this.labelsForArticlesService = labelsForArticlesService;
         this.restTemplate = restTemplate;
+        this.request = request;
     }
 
     @Override
@@ -148,7 +155,10 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<SearchVO> search(BlogSearchRequest request) {
         final String formattedUrl = String.format(SEARCH_URL, request.getKeyword(), request.getLimit(), request.getPage());
-        final SearchDTO result = this.restTemplate.getForObject(formattedUrl, SearchDTO.class);
+        final HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.request.getHeader("Authorization"));
+        final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        final SearchDTO result = this.restTemplate.exchange(formattedUrl, HttpMethod.GET, httpEntity, SearchDTO.class).getBody();
         if (Objects.isNull(result)) {
             return null;
         }

@@ -16,6 +16,11 @@ public enum ResponseEnum {
     NO_BLOGS_IN_THE_LABEL("B0001", "该博客没有标签"),
 
     TOO_MANY_REQUEST("A0501","请求过于频繁, 请稍后再试"),
+    HTTP_REQUEST_EXCEPTION("B0001", "HTTP 请求异常"),
+
+    REGISTER_FAILED("B0001", "注册失败"),
+    CONNECT_TO_GITHUB_FAILED("B0001", "连接到 GitHub 服务器时失败"),
+    AUTHORIZATION_FAILED("B0001", "认证失败"),
 
     SET_COVER_FAIL("B0001", "设置封面失败");
 
