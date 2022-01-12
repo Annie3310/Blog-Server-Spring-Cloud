@@ -10,8 +10,11 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import top.cattycat.common.pojo.oauth.github.request.ValidateRequest;
 import top.cattycat.common.pojo.oauth.github.response.GitHubUserInfoResponse;
 import top.cattycat.common.util.JwtUtils;
+import top.cattycat.controller.constant.Constant;
+import top.cattycat.controller.controller.Login;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -24,6 +27,9 @@ import java.net.Proxy;
 public class BlogTest {
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Autowired
+    Login login;
 
     @Autowired
     @Qualifier("defaultRestTemplate")
@@ -47,6 +53,13 @@ public class BlogTest {
         ops.set("f58ce964b5778b4c2ab892cb668edf74cf1a", "1");
 //        System.out.println(ops.get("f58ce964b5778b4c2ab892cb668edf74cf1a"));
         System.out.println(ops.get("f58ce964b5778b4c2ab892cb668edf74cf1a"));
+    }
+
+    @Test
+    void loginValidateTest() {
+        ValidateRequest validateRequest = new ValidateRequest();
+        validateRequest.setState(String.format(Constant.USER_JWT_TOKEN_TEMPLATE, "0af89642f06b4f4586f88d0f9655a19cfc3d"));
+        this.login.validate(validateRequest);
     }
 
     @Test
