@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import top.cattycat.common.config.BlogConfig;
 import top.cattycat.common.pojo.vo.SearchVO;
 import top.cattycat.common.util.JwtUtils;
+import top.cattycat.controller.constant.Constant;
 import top.cattycat.service.impl.ArticleServiceImpl;
 import top.cattycat.service.impl.BlogServiceImpl;
 import top.cattycat.service.impl.LabelServiceImpl;
@@ -53,13 +54,11 @@ public class RequestServiceImpl implements RequestService {
     private final static String BLOG_STATE_CLOSED = "closed";
     private final static String BLOG_STATE_OPEN = "open";
     private final static String SEARCH_URL = "https://api.github.com/search/issues?q=repo:Annie3310/blog+author:Annie3310+%s in:title,body&per_page=%d&page=%d&order=asc";
-    private final static String USER_ACCESS_TOKEN_TEMPLATE = "user-access-token-%s";
 
     private final BlogServiceImpl blogService;
     private final ArticleServiceImpl articleService;
     private final LabelServiceImpl labelService;
     private final LabelsForArticlesServiceImpl labelsForArticlesService;
-    @Qualifier("restTemplateWithProxy")
     private final RestTemplate restTemplate;
     private final HttpServletRequest request;
     private final RedisTemplate redisTemplate;
@@ -166,7 +165,7 @@ public class RequestServiceImpl implements RequestService {
         final HttpHeaders headers = new HttpHeaders();
         final String authorization = this.request.getHeader("Authorization");
         final String id = JwtUtils.parseToken(authorization).get("id", String.class);
-        final String accessToken = String.valueOf(this.redisTemplate.opsForValue().get(String.format(USER_ACCESS_TOKEN_TEMPLATE, id)));
+        final String accessToken = String.valueOf(this.redisTemplate.opsForValue().get(String.format(Constant.USER_ACCESS_TOKEN_TEMPLATE, id)));
 
         headers.add("Authorization", accessToken);
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
