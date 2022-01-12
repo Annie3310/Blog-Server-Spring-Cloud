@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import top.cattycat.common.config.GitHubConfig;
@@ -19,6 +20,8 @@ import top.cattycat.common.pojo.oauth.github.response.GitHubUserInfoResponse;
 import top.cattycat.mapper.mapper.UserMapper;
 import top.cattycat.service.UserService;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.Date;
 import java.util.Objects;
 
@@ -29,7 +32,7 @@ import java.util.Objects;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Qualifier("defaultRestTemplate")
+//    @Qualifier("restTemplateWithProxy")
     private final RestTemplate restTemplate;
     private final GitHubConfig gitHubConfig;
     private final static String GET_ACCESS_TOKEN_URI = "https://github.com/login/oauth/access_token";
@@ -39,6 +42,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public UserServiceImpl(RestTemplate restTemplate, GitHubConfig gitHubConfig) {
         this.restTemplate = restTemplate;
         this.gitHubConfig = gitHubConfig;
+
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setProxy(
+                new Proxy(
+                        Proxy.Type.HTTP,
+                        //设置代理服务
+                        new InetSocketAddress("127.0.0.1", 4780)
+                )
+        );
+        this.restTemplate.setRequestFactory(requestFactory);
     }
 
     @Override
