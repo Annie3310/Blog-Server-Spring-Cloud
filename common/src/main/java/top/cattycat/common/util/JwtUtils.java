@@ -29,6 +29,7 @@ public class JwtUtils {
             {
                 put("id", userInfo.getId());
                 put("login", login);
+                put("avatar", userInfo.getAvatarUrl());
             }
         };
         return Jwts.builder()
