@@ -1,6 +1,8 @@
 package top.cattycat.controller.constant;
 
 /**
+ * Redis Key 模板
+ *
  * @author 王金义
  * @date 2022/1/12
  */

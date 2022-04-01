@@ -1,8 +1,8 @@
 package top.cattycat.controller.controller;
 
 import top.cattycat.common.config.BlogConfig;
+import top.cattycat.common.enums.ExceptionEnum;
 import top.cattycat.common.enums.ResponseEnum;
-import top.cattycat.common.pojo.response.ResponseFactory;
 import top.cattycat.common.pojo.vo.BlogVO;
 import top.cattycat.common.pojo.vo.LabelVO;
 import top.cattycat.common.pojo.vo.SearchVO;
@@ -34,74 +34,71 @@ public class BlogController {
         this.blogConfig = blogConfig;
     }
 
-    @GetMapping("blog")
+    @GetMapping("/blog")
     public Object blog() {
         return blogConfig.getUsername();
     }
 
-    @GetMapping("list/blogs")
+    @GetMapping("/list/blogs")
     public ResponseResult<List<BlogVO>> listBlogs(@Valid PageParam page) {
         final List<BlogVO> result = this.service.listBlogs(page);
-        return new ResponseFactory<List<BlogVO>>().success(result);
+        return ResponseResult.success(result);
     }
 
-    @GetMapping("get/blog/{number}")
+    @GetMapping("/get/blog/{number}")
     public ResponseResult<BlogVO> getBlog(@PathVariable String number) {
         final BlogVO result = this.service.getBlog(number);
-        return new ResponseFactory<BlogVO>().success(result);
+        return ResponseResult.success(result);
     }
 
-    @GetMapping("list/labels")
+    @GetMapping("/list/labels")
     public ResponseResult<List<LabelVO>> listLabels() {
         final List<LabelVO> result = this.service.listLabels();
-        final ResponseFactory<List<LabelVO>> resultFactory = new ResponseFactory<>();
         if (Objects.isNull(result)) {
-            return resultFactory.error(ResponseEnum.NO_LABELS);
+            return ResponseResult.error(ExceptionEnum.NO_LABELS);
         }
-        return resultFactory.success(result);
+        return ResponseResult.success(result);
     }
 
-    @GetMapping("list/labels/blog/{number}")
+    @GetMapping("/list/labels/blog/{number}")
     public ResponseResult<List<LabelVO>> getLabelsByBlogNumber(@PathVariable String number) {
         final List<LabelVO> result = this.service.listLabelsForBlog(number);
-        return new ResponseFactory<List<LabelVO>>().success(result);
+        return ResponseResult.success(result);
     }
 
-    @GetMapping("list/blogs/label/{id}")
+    @GetMapping("/list/blogs/label/{id}")
     public ResponseResult<List<BlogVO>> listBlogsByLabelId(@Valid PageParam page, @PathVariable Long id) {
         final List<BlogVO> result = this.service.listBlogsByLabel(id, page);
-        final ResponseFactory<List<BlogVO>> resultFactory = new ResponseFactory<>();
         if (Objects.isNull(result)) {
-            resultFactory.error(ResponseEnum.NO_BLOGS_IN_THE_LABEL);
+            return ResponseResult.error(ResponseEnum.NO_BLOGS_IN_THE_LABEL);
         }
-        return resultFactory.success(result);
+        return ResponseResult.success(result);
     }
 
-    @GetMapping("get/label/{id}")
+    @GetMapping("/get/label/{id}")
     public ResponseResult<LabelVO> getLabel(@PathVariable Long id) {
         final LabelVO result = this.service.getLabelById(id);
-        return new ResponseFactory<LabelVO>().success(result);
+        return ResponseResult.success(result);
     }
 
-    @GetMapping("list/archive")
+    @GetMapping("/list/archive")
     public ResponseResult<List<BlogVO>> listArchive(@Valid PageParam page) {
         final List<BlogVO> result = this.service.listArchive(page);
-        return new ResponseFactory<List<BlogVO>>().success(result);
+        return ResponseResult.success(result);
     }
 
-    @GetMapping("search/blogs")
+    @GetMapping("/search/blogs")
     public ResponseResult<List<SearchVO>> search(@Valid BlogSearchRequest request) {
         final List<SearchVO> result = this.service.search(request);
-        final ResponseFactory<List<SearchVO>> resultFactory = new ResponseFactory<>();
         if (Objects.isNull(request)) {
-            return resultFactory.error(ResponseEnum.SEARCH_NO_RESULT);
+            return ResponseResult.error(ResponseEnum.SEARCH_NO_RESULT);
         }
-        return resultFactory.success(result);
+        return ResponseResult.success(result);
     }
 
-    @PutMapping("set/cover")
+    @PutMapping("/set/cover")
     public ResponseResult<Boolean> setCover(@Valid @RequestBody SetCoverRequest request) {
         final Boolean result = this.service.setCover(request);
-        return new ResponseFactory<Boolean>().success(result);
+        return ResponseResult.success(result);
     }
 }

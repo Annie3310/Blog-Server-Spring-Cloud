@@ -5,14 +5,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
-import top.cattycat.common.enums.ResponseEnum;
-import top.cattycat.common.exception.BlogException;
+import top.cattycat.common.enums.ExceptionEnum;
+import top.cattycat.common.exception.ConnectToGitHubFailedException;
 import top.cattycat.common.pojo.oauth.github.request.ValidateRequest;
 import top.cattycat.common.pojo.oauth.github.response.GitHubAuthorizationResponse;
 import top.cattycat.common.pojo.oauth.github.response.GitHubGetAccessTokenResponse;
 import top.cattycat.common.pojo.oauth.github.response.GitHubUserInfoResponse;
 import top.cattycat.common.pojo.oauth.github.response.LoggedInResponse;
-import top.cattycat.common.pojo.response.ResponseFactory;
 import top.cattycat.common.pojo.response.ResponseResult;
 import top.cattycat.common.pojo.vo.UserVO;
 import top.cattycat.common.util.JwtUtils;
@@ -46,7 +45,7 @@ public class Login {
         final Long id = userInformation.getId();
 
         if (Objects.isNull(id)) {
-            throw new BlogException(ResponseEnum.CONNECT_TO_GITHUB_FAILED);
+            throw new ConnectToGitHubFailedException();
         }
         // Whether user has registered
         final String jwtToken = JwtUtils.getToken(userInformation);
@@ -66,9 +65,8 @@ public class Login {
         final ValueOperations<String, String> opsForValue = this.redisTemplate.opsForValue();
         final String jwtTokenKey = String.format(Constant.USER_JWT_TOKEN_TEMPLATE, state.getState());
         final String jwtToken = opsForValue.get(jwtTokenKey);
-        final ResponseFactory<LoggedInResponse> resultFactory = new ResponseFactory<>();
         if (StringUtils.isEmpty(jwtToken)) {
-            return resultFactory.error(ResponseEnum.LOGIN_IS_NOT_COMPLETE);
+            return ResponseResult.error(ExceptionEnum.LOGIN_IS_NOT_COMPLETE);
         } else {
             final Claims claims = JwtUtils.parseToken(jwtToken);
             final String login = String.valueOf(claims.get("login"));
@@ -76,7 +74,7 @@ public class Login {
             final UserVO userVO = new UserVO().setLogin(login).setAvatarUrl(avatar);
             LoggedInResponse result = new LoggedInResponse().setAccessToken(avatar).setUserInfo(userVO);
             this.redisTemplate.delete(jwtTokenKey);
-            return resultFactory.success(result);
+            return ResponseResult.success(result);
         }
     }
     /**

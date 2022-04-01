@@ -9,10 +9,11 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.cattycat.common.enums.ResponseEnum;
-import top.cattycat.common.exception.BlogException;
+import top.cattycat.common.enums.ExceptionEnum;
+import top.cattycat.common.exception.IllegalAuthorizationException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 /**
  * verify token aspect
@@ -29,17 +30,22 @@ public class JwtAspect {
 
     /**
      * Restrict searches to logged-in users
-     * @param joinPoint
-     * @return
-     * @throws Throwable
+     * @param joinPoint 切入点
+     * @return 返回值
+     * @throws Throwable 可能发生的错误
      */
     @Around("search()")
     public Object verify(ProceedingJoinPoint joinPoint) throws Throwable {
         //获取request
-        final HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        final ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (Objects.isNull(requestAttributes)) {
+            throw new RuntimeException(ExceptionEnum.SERVER_ERROR.getMessage());
+        }
+        final HttpServletRequest request = requestAttributes.getRequest();
+
         final String token = request.getHeader("Authorization");
         if (StringUtils.isEmpty(token)) {
-            throw new BlogException(ResponseEnum.AUTHORIZATION_FAILED);
+            throw new IllegalAuthorizationException();
         } else {
             return joinPoint.proceed();
         }

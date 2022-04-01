@@ -1,17 +1,13 @@
 package top.cattycat.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import top.cattycat.common.config.GitHubConfig;
-import top.cattycat.common.enums.ResponseEnum;
-import top.cattycat.common.exception.BlogException;
 import top.cattycat.common.pojo.entity.User;
 import top.cattycat.common.pojo.oauth.github.request.GitHubAccessTokenRequest;
 import top.cattycat.common.pojo.oauth.github.response.GitHubAuthorizationResponse;
@@ -32,7 +28,6 @@ import java.util.Objects;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-//    @Qualifier("restTemplateWithProxy")
     private final RestTemplate restTemplate;
     private final GitHubConfig gitHubConfig;
     private final static String GET_ACCESS_TOKEN_URI = "https://github.com/login/oauth/access_token";
@@ -62,12 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         headers.set("Accept", "application/json");
         HttpEntity<GitHubAccessTokenRequest> httpEntity = new HttpEntity<>(accessTokenRequestBody, headers);
         GitHubGetAccessTokenResponse accessTokenResponse;
-        try {
-            accessTokenResponse = this.restTemplate.postForObject(GET_ACCESS_TOKEN_URI, httpEntity, GitHubGetAccessTokenResponse.class);
-        } catch (Exception e) {
-            throw new BlogException(ResponseEnum.HTTP_REQUEST_EXCEPTION);
-        }
-
+        accessTokenResponse = this.restTemplate.postForObject(GET_ACCESS_TOKEN_URI, httpEntity, GitHubGetAccessTokenResponse.class);
         return accessTokenResponse;
     }
 

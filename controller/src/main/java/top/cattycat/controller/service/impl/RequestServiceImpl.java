@@ -3,12 +3,10 @@ package top.cattycat.controller.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import io.jsonwebtoken.Claims;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,8 +21,6 @@ import top.cattycat.service.impl.BlogServiceImpl;
 import top.cattycat.service.impl.LabelServiceImpl;
 import top.cattycat.service.impl.LabelsForArticlesServiceImpl;
 import top.cattycat.controller.service.RequestService;
-import top.cattycat.common.enums.ResponseEnum;
-import top.cattycat.common.exception.BlogException;
 import top.cattycat.common.pojo.Converter;
 import top.cattycat.common.pojo.dto.LabelsForArticlesDTO;
 import top.cattycat.common.pojo.dto.SearchDTO;
@@ -61,9 +57,9 @@ public class RequestServiceImpl implements RequestService {
     private final LabelsForArticlesServiceImpl labelsForArticlesService;
     private final RestTemplate restTemplate;
     private final HttpServletRequest request;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    public RequestServiceImpl(BlogConfig blogConfig, BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate, HttpServletRequest request, RedisTemplate redisTemplate) {
+    public RequestServiceImpl(BlogConfig blogConfig, BlogServiceImpl blogService, ArticleServiceImpl articleService, LabelServiceImpl labelService, LabelsForArticlesServiceImpl labelsForArticlesService, RestTemplate restTemplate, HttpServletRequest request, RedisTemplate<String, String> redisTemplate) {
         this.blogConfig = blogConfig;
         this.blogService = blogService;
         this.articleService = articleService;
@@ -91,24 +87,18 @@ public class RequestServiceImpl implements RequestService {
         final Article article = this.getArticleMapper(number);
 
         // 组装
-        final BlogVO blogVO = BlogVO.builder()
-                .number(blog.getNumber())
-                .title(blog.getTitle())
-                .state(blog.getState())
-                .body(article.getBody())
-                .toc(article.getToc())
-                .createdAt(blog.getCreatedAt())
-                .updatedAt(blog.getUpdatedAt())
-                .cover(blog.getCover())
-                .build();
+        final BlogVO blogVO = new BlogVO();
+        BeanUtils.copyProperties(blog, blogVO);
+        blogVO.setBody(article.getBody());
+        blogVO.setToc(article.getToc());
+
         final LabelsForArticlesDTO lfa = this.getLfaMapper(number);
 
         // 如果有标签则加入标签关系
         if (Objects.nonNull(lfa)) {
             final List<Label> labels = this.getLabelsMapper(lfa.getLId());
-            final List<LabelVO> labelVOS = labels.stream().map(Converter::labelVO).collect(Collectors.toList());
-            final Optional<List<LabelVO>> optionalLabelVOS = Optional.of(labelVOS);
-            optionalLabelVOS.ifPresent(blogVO::setLabels);
+            final List<LabelVO> labelVOs = labels.stream().map(Converter::labelVO).collect(Collectors.toList());
+            blogVO.setLabels(labelVOs);
         }
         return blogVO;
     }
@@ -200,10 +190,10 @@ public class RequestServiceImpl implements RequestService {
 
     private List<BlogVO> listBlogs(PageParam page, String state) {
         final PageParam pageParam = Optional.ofNullable(page).orElseGet(() -> new PageParam(1, this.blogConfig.getPage().getLimit()));
-        final Optional<List<Blog>> optionalBlogs = Optional.ofNullable(this.listBlogsMapper(new Page<>(pageParam.getPage(), pageParam.getLimit()), state));
+
         // 获取博客
-        final List<Blog> blogs = optionalBlogs.orElseThrow(() -> new BlogException(ResponseEnum.NO_BLOG));
-        if (blogs.isEmpty()) {
+        final List<Blog> blogs = this.listBlogsMapper(new Page<>(pageParam.getPage(), pageParam.getLimit()), state);
+        if (CollectionUtils.isEmpty(blogs)) {
             return new ArrayList<>();
         }
         // 获取标签博客映射关系
@@ -296,12 +286,9 @@ public class RequestServiceImpl implements RequestService {
     private List<BlogVO> listBlogs(List<Blog> blogs, Map<String, List<Long>> lfaMap) {
         return blogs.stream().map(o -> {
             final String number = o.getNumber();
-            final BlogVO blogVO = BlogVO.builder()
-                    .number(number)
-                    .title(o.getTitle())
-                    .createdAt(o.getCreatedAt())
-                    .cover(o.getCover())
-                    .build();
+            final BlogVO blogVO = new BlogVO();
+            BeanUtils.copyProperties(o, blogVO);
+
             final List<Long> lfaLIds = lfaMap.get(number);
             if (CollectionUtils.isNotEmpty(lfaMap.get(number))) {
                 final List<LabelVO> labelVOList = lfaLIds.stream().map(this::getLabelMapper).collect(Collectors.toList());
